@@ -1,6 +1,15 @@
 
 # Setup LLM Self-hosting
 
+## Initialize Docker Container
+
+```
+sudo docker run -it --name <container_name> --gpus='"device=5"' -p 11876:11434 nvidia/cuda:12.8.0-cudnn-devel-ubuntu24.04
+```
+
+`device=5` takes the GPU with index 5\
+`-p 11876:11434` -> `outbound-port:inbound-port`
+
 ## Prepare Docker Container
 
 Initial package installations
@@ -10,7 +19,8 @@ apt-get update
 apt-get install lshw
 apt-get install nano
 apt-get install curl
-apt-get update && apt-get install -y libxcb1 libx11-6 libxext6 libxrender1 libgl1
+(apt-get install git) <-- If you want to clone this repo
+apt-get install -y libxcb1 libx11-6 libxext6 libxrender1 libgl1
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
