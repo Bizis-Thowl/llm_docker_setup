@@ -4,11 +4,12 @@
 ## Initialize Docker Container
 
 ```
-sudo docker run -it --name <container_name> --gpus='"device=5"' -p 11876:11434 nvidia/cuda:12.8.0-cudnn-devel-ubuntu24.04
+sudo docker run -it --name <container_name> --gpus='"device=<index>"' -p <outbound>:<inbound> nvidia/cuda:12.8.0-cudnn-devel-ubuntu24.04
 ```
 
-`device=5` takes the GPU with index 5\
-`-p 11876:11434` -> `outbound-port:inbound-port`
+Descriptions\
+`device=5` takes the GPU with index 5 Check different GPU load via `nvidia-smi`\
+`-p 11876:11434` -> `outbound-port:inbound-port`: Wenn im Container ein LLM auf Port 11434 läuft, kann es von außerhalb des Containers via Port 11876 angesprochen werden.
 
 ## Prepare Docker Container
 
@@ -21,7 +22,6 @@ apt-get install nano
 apt-get install curl
 (apt-get install git) <-- If you want to clone this repo
 apt-get install -y libxcb1 libx11-6 libxext6 libxrender1 libgl1
-curl -fsSL https://ollama.com/install.sh | sh
 ```
 
 ## Setup VLLM
@@ -44,6 +44,9 @@ Examples can be found here: `vllm_setup_files/`
 
 ## Setup OLLAMA
 
+install:\
+`curl -fsSL https://ollama.com/install.sh | sh`
+
 Pull Ollama model (from https://ollama.com/library?sort=newest):\
 `ollama pull modelname`
 
@@ -57,3 +60,8 @@ Serve with outside access:\
 `OLLAMA_HOST=0.0.0.0:11434 ollama serve`\
 Kill Process:\
 `pkill ollama`
+
+## Test from outside
+
+Example (server_url:port/v1/models):\
+List running models on Port: http://hal9000.skim.th-owl.de:11876/v1/models
