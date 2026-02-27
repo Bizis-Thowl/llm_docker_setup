@@ -83,7 +83,7 @@ Inside the container you can run your model by ``ollama run <model-name>``. Olla
 
 After finishing your work with a container, you can stop your docker-container with
 ``
-docker stop <container-name>
+sudo docker stop <container-name>
 ``
 
 ## Test from outside
