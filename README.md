@@ -3,6 +3,8 @@
 
 ## Initialize Docker Container
 
+> :warning: **Note:** If you are using Ollama, you can also run a dedicated Ollama-Container. More on that in "Dedicated Ollama Container"
+
 ```
 sudo docker run -it --name <container_name> --gpus='"device=<index>"' -p <outbound>:<inbound> nvidia/cuda:12.8.0-cudnn-devel-ubuntu24.04
 ```
@@ -60,6 +62,29 @@ Serve with outside access:\
 `OLLAMA_HOST=0.0.0.0:11434 ollama serve`\
 Kill Process:\
 `pkill ollama`
+
+## Dedicated Ollama-Container
+
+It is also possible to run an ollama Docker image. To do so run the following command (Make sure to replace the names in the <>-brackets with your own):
+
+``
+sudo docker run --gpus "device=<gpu-index>" --name <container-name> -it --rm -p <port-number>:<port-number> ollama/ollama
+``
+
+| name | purpose |
+|---|---|
+| `<gpu-index>` | Indicates the index (e.g. 3) of the GPU that shoul be used. Make sure to check for the different GPU loads via `nvidia-smi`. |
+| `<container-name>` | A name for your container. Useful for working with the container and to stop it from running. |
+| `<port-number>` | The port number under which your container can be reached from the network. |
+
+After running your container you need to open a shell within the container. You can do that by running ``sudo docker exec -it <container-name> sh``
+
+Inside the container you can run your model by ``ollama run <model-name>``. Ollama will then open a shell for your model which you can leave with ``/bye``. After that you can run ``OLLAMA_HOST=0.0.0.0:<port-number> ollama serve`` to make your model accessible from the outside
+
+After finishing your work with a container, you can stop your docker-container with
+``
+sudo docker stop <container-name>
+``
 
 ## Test from outside
 
