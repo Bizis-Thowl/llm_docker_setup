@@ -68,7 +68,7 @@ Kill Process:\
 It is also possible to run an ollama Docker image. To do so run the following command (Make sure to replace the names in the <>-brackets with your own):
 
 ``
-sudo docker run --gpus "device=<gpu-index>" --name <container-name> -it --rm -p <port-number>:<port-number> ollama/ollama
+sudo docker run --gpus "device=<gpu-index>" --name <container-name> -it --rm -p <port-number>:11434 ollama/ollama
 ``
 
 | name | purpose |
@@ -80,6 +80,22 @@ sudo docker run --gpus "device=<gpu-index>" --name <container-name> -it --rm -p 
 After running your container you need to open a shell within the container. You can do that by running ``sudo docker exec -it <container-name> sh``
 
 Inside the container you can run your model by ``ollama run <model-name>``. Ollama will then open a shell for your model which you can leave with ``/bye``. After that you can run ``OLLAMA_HOST=0.0.0.0:<port-number> ollama serve`` to make your model accessible from the outside
+
+To add a Modelfile you can connect your working directory with the docker container by adding ``-v /your/specified/directory/:/workspace`` to the startup command.
+The full command would look something like this:
+
+``
+sudo docker run --gpus "device=<gpu-index>" --name <container-name> -it --rm -v /your/specified/directory/:/workspace -p <port-number>:11434 ollama/ollama
+``
+
+You can then add a modelfile to your working directory. To add the qwen3-embedding-model for example you can use the following modelfile:
+
+```
+FROM qwen3-embedding:latest
+PARAMETER num_ctx 40000
+```
+
+To run a model using the modelfile use ``ollama create name_of_model -f Name_of_your_Modelfile`` inside the workspace folder of your docker container.
 
 After finishing your work with a container, you can stop your docker-container with
 ``
